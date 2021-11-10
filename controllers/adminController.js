@@ -166,7 +166,6 @@ module.exports = {
           path: "categoryId",
           select: "id name",
         });
-      console.log(item);
       const category = await Category.find();
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
@@ -262,6 +261,89 @@ module.exports = {
         action: "edit",
       });
     } catch (e) {
+      req.flash("alertMessage", `${e.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/item");
+    }
+  },
+  editItem: async(req, res) => {
+    try {
+      const { id } = req.params;
+      const { categoryId, title, price, city, about } = req.body;
+      console.log(req.body);
+      console.log(id)
+      const item = await Item.findOne({ _id: id })
+      .populate({
+        path: "imageId",
+        select: "id imageUrl",
+      })
+      .populate({
+        path: "categoryId",
+        select: "id name",
+      });
+
+      if(req.files.length>0){
+        for(let i=0; i<item.imageId.length;i++){
+          const imageUpdate = await Image.findOne({_id:item.imageId[i]._id});
+          // jika ada di path, maka di unlink
+          if(fs.existsSync(path.join(`public/${imageUpdate.imageUrl}`)))
+          {
+            await fs.unlink(path.join(`public/${imageUpdate.imageUrl}`));
+            imageUpdate.imageUrl = `images/${req.files[i].filename}`;
+          }
+          // jika tidak ada di path, maka di hapus di image collection
+          else
+          {
+            await Image.findOneAndRemove({_id:item.imageId[i]._id});
+          }
+          await imageUpdate.save();
+        }
+        item.title=title;
+        item.price=price;
+        item.city=city;
+        item.description=about;
+        item.categoryId=categoryId;
+        await item.save();
+        req.flash("alertMessage", "Success Update Item");
+        req.flash("alertStatus", "success");
+        res.redirect("/admin/item");
+      }else{
+        item.title=title;
+        item.price=price;
+        item.city=city;
+        item.description=about;
+        item.categoryId=categoryId;
+        await item.save();
+        req.flash("alertMessage", "Success Update Item without image");
+        req.flash("alertStatus", "success");
+        res.redirect("/admin/item");
+      }
+    } catch (e) {
+      console.log(e)
+      req.flash("alertMessage", `${e.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/item");
+    }
+  },
+  deleteItem: async(req, res) => {
+    try{
+      const { id } = req.params;
+      const item = await Item.findOne({ _id: id }).populate("imageId");
+      for (let i = 0; i < item.imageId.length; i++) {
+        Image.findOne({_id:item.imageId[i]._id}).then((r)=>{
+          fs.unlink(path.join(`public/${r.imageUrl}`));
+          r.remove();
+        }).catch((e)=>{
+          req.flash("alertMessage", `${e.message}`);
+          req.flash("alertStatus", "danger");
+          res.redirect("/admin/item");
+        })
+      }
+      await item.remove();
+      req.flash("alertMessage", "Success Update Item");
+      req.flash("alertStatus", "success");
+      res.redirect("/admin/item");
+    }catch(e){
       req.flash("alertMessage", `${e.message}`);
       req.flash("alertStatus", "danger");
       res.redirect("/admin/item");
