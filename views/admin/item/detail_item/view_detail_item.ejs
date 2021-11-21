@@ -79,12 +79,38 @@
       </div>
     </div>
   </div>
+  <%- include('show_modal_activity') %> 
+  <%- include('show_modal_feature') %> 
   <%- include('../../../partials/js') %> 
+
   <script>
-      $(document).ready(function () {
-          $('#dataTableActivity').DataTable();
-      })
+    $(document).ready(function () {
+      $('#dataTableActivity').DataTable();
+    })
     CKEDITOR.replace( 'about' );
+    // to fill modal form based on name input 
+    $("#dataTable").on("click", ".button-update", function () {
+      let id = $(this).data('id');
+      let name = $(this).data('name');
+      let qty = $(this).data('qty');
+
+      $('#edit-modal').modal('show');
+      $('.id').val(id);
+      $('.name').val(name);
+      $('.qty').val(qty);
+    })
+
+    $("#dataTableActivity").on("click", ".button-update", function () {
+      // ambil data di datatable 
+      let id = $(this).data('id');
+      let name = $(this).data('name');
+      let type = $(this).data('type');
+      // show ke modal
+      $('#edit-modal-activity').modal('show');
+      $('.id').val(id);
+      $('.name').val(name);
+      $('.type').val(type);
+    })
   </script>
 </body>
 
