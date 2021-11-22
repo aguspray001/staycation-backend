@@ -35,7 +35,7 @@
               <td><%= data[i].nomorRekening %></td>
               <td><%= data[i].name %></td>
               <td class="d-flex justify-content-center">
-                <img src="http://admin-staycation.herokuapp.com/<%= data[i].imageUrl %>" alt="imageUrl" width="80px"/>
+                <img src="http://staycation-admin-bwa.herokuapp.com/<%= data[i].imageUrl %>" alt="imageUrl" width="80px"/>
               </td>
               <td>
                 <form action="/admin/bank/<%=data[i].id%>?_method=DELETE" method="POST">
