@@ -1,3 +1,4 @@
+// seeder to insert mockup data automatically
 var seeder = require('mongoose-seed');
 var mongoose = require("mongoose");
 
