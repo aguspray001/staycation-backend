@@ -3,7 +3,7 @@ var seeder = require('mongoose-seed');
 var mongoose = require("mongoose");
 
 // Connect to MongoDB via Mongoose
-seeder.connect("mongodb://localhost:27017/myapp", function () {
+seeder.connect("mongodb+srv://aguspray001:Lolopoppop012@cluster0.ejlik.mongodb.net/staycation?retryWrites=true&w=majority", function () {
     // Load Mongoose models
     seeder.loadModels([
       "models/Category",

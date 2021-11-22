@@ -8,7 +8,7 @@ const session = require("express-session");
 const flash = require('connect-flash');
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/myapp", {useNewUrlParser: true,});
+mongoose.connect("mongodb+srv://aguspray001:Lolopoppop012@cluster0.ejlik.mongodb.net/staycation?retryWrites=true&w=majority", {useNewUrlParser: true,});
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
